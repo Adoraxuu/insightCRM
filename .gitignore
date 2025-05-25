@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+
+# .env 
+.env
+
+# Drizzle ORM
+connection/migrations/
+connection/migrations/meta/
+drizzle/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS/system files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+
+
+# Backup files
+*.swp
+*~
