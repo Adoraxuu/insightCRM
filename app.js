@@ -3,15 +3,29 @@ const express = require('express');
 const cors = require('cors');
 const apiRoutes = require('./routes');
 const authRoutes = require('./routes/auth');
+const customerRoutes = require('./routes/customers');
 
 // init
 const app = express();
 
 // middleware
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+    ? process.env.ALLOWED_ORIGINS.split(',')
+    : [];
+
 app.use(cors({
-    origin: process.env.ALLOWED_ORIGINS || '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        } else {
+            return callback(new Error('不允許的 CORS 來源'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true,
+    optionsSuccessStatus: 200
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -38,6 +52,7 @@ app.get('/', (req, res) => {
 // API 
 app.use('/api', apiRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/customers', customerRoutes);
 
 // handle 404
 app.use((req, res) => {
